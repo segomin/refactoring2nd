@@ -10,6 +10,9 @@ plugins {
 dependencies {
     // Project "app" depends on project "utils". (Project paths are separated with ":", so ":utils" refers to the top-level "utils" project.)
     implementation(project(":utils"))
+    // junit
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testImplementation(kotlin("test"))
 }
 
 application {

@@ -1,10 +1,15 @@
 package org.sangho.app.ch01
 
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 import kotlin.math.floor
 
-class Invoice(val customer: String, val age: Int) {
+class Performance(val playID: String, val audience: Int)
+
+class Invoice(val customer: String, private val performances: List<Performance>) {
     fun getPerformances(): List<Performance> {
-        TODO("Not yet implemented")
+        return performances
     }
 }
 
@@ -14,11 +19,6 @@ class Play(val name: String, val type: Type) {
     }
 }
 
-class Performance() {
-    fun getAudience(): Int {
-        TODO("Not yet implemented")
-    }
-}
 
 class Statement {
     @Throws(Exception::class)
@@ -33,41 +33,45 @@ class Statement {
             when (play.type) {
                 Play.Type.TRAGEDY -> {
                     thisAmount = 40000
-                    if (performance.getAudience() > 30) {
-                        thisAmount += 1000 * (performance.getAudience() - 30)
+                    if (performance.audience > 30) {
+                        thisAmount += 1000 * (performance.audience - 30)
                     }
                 }
+
                 Play.Type.COMEDY -> {
                     thisAmount = 30000
-                    if (performance.getAudience() > 20) {
-                        thisAmount += 10000 + 500 * (performance.getAudience() - 20)
+                    if (performance.audience > 20) {
+                        thisAmount += 10000 + 500 * (performance.audience - 20)
                     }
-                    thisAmount += 300 * performance.getAudience()
+                    thisAmount += 300 * performance.audience
                 }
+
                 else -> throw Exception("알 수 없는 장르")
             }
 
             // 포인트를 적립한다.
-            volumeCredit += Math.max(performance.getAudience() - 30, 0)
+            volumeCredit += Math.max(performance.audience - 30, 0)
 
             // 희극 관객 5명마다 추가 포인트를 제공핟나.
             if (play.type == Play.Type.COMEDY) {
-                volumeCredit = (volumeCredit + floor((performance.getAudience().toDouble() / 5))).toInt()
+                volumeCredit = (volumeCredit + floor((performance.audience.toDouble() / 5))).toInt()
             }
 
             // 청구 내역을 출력한다.
             result.append(
-                java.lang.String.format(
+                String.format(
                     "%s: $%d %d석\n",
                     play.name,
                     thisAmount / 100,
-                    performance.getAudience()
+                    performance.audience
                 )
             )
             totalAmount += thisAmount
         }
-
-        result.append(String.format("총액: $%d\n", totalAmount / 100))
+        
+        val totalStr = DecimalFormat("#,##0.00", DecimalFormatSymbols(Locale.US))
+            .format(totalAmount.toDouble() / 100)
+        result.append(String.format("총액: $%s\n", totalStr))
         result.append(String.format("적립 포인트: %d점", volumeCredit))
         return result.toString()
     }
