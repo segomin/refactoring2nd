@@ -34,14 +34,13 @@ class Statement {
         var volumeCredit = 0
         val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.customer))
         for (performance in invoice.getPerformances()) {
-            val play: Play = playFor(plays, performance)
-            val thisAmount = amountFor(performance, play)
+            val thisAmount = amountFor(performance, plays)
 
             // 포인트를 적립한다.
             volumeCredit += Math.max(performance.audience - 30, 0)
 
             // 희극 관객 5명마다 추가 포인트를 제공핟나.
-            if (play.type == Play.Type.COMEDY) {
+            if (playFor(plays, performance).type == Play.Type.COMEDY) {
                 volumeCredit = (volumeCredit + floor((performance.audience.toDouble() / 5))).toInt()
             }
 
@@ -49,7 +48,7 @@ class Statement {
             result.append(
                 String.format(
                     "%s: $%d %d석\n",
-                    play.name,
+                    playFor(plays, performance).name,
                     thisAmount / 100,
                     performance.audience
                 )
@@ -64,27 +63,27 @@ class Statement {
         return result.toString()
     }
 
-    private fun amountFor(performance: Performance, play: Play): Int {
-        var thisAmount: Int
-        when (play.type) {
+    private fun amountFor(performance: Performance, plays: Plays): Int {
+        var result: Int
+        when (plays.getPlay(performance).type) {
             Play.Type.TRAGEDY -> {
-                thisAmount = 40000
+                result = 40000
                 if (performance.audience > 30) {
-                    thisAmount += 1000 * (performance.audience - 30)
+                    result += 1000 * (performance.audience - 30)
                 }
             }
 
             Play.Type.COMEDY -> {
-                thisAmount = 30000
+                result = 30000
                 if (performance.audience > 20) {
-                    thisAmount += 10000 + 500 * (performance.audience - 20)
+                    result += 10000 + 500 * (performance.audience - 20)
                 }
-                thisAmount += 300 * performance.audience
+                result += 300 * performance.audience
             }
 
             else -> throw java.lang.Exception("알 수 없는 장르")
         }
-        return thisAmount
+        return result
     }
 
     private fun playFor(plays: Plays, performance: Performance): Play {
