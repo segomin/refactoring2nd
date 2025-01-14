@@ -21,33 +21,13 @@ class Play(val name: String, val type: Type) {
 
 
 class Statement {
-    @Throws(Exception::class)
     fun statement(invoice: Invoice, plays: Map<Performance, Play>): String {
         var totalAmount = 0
         var volumeCredit = 0
         val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.customer))
         for (performance in invoice.getPerformances()) {
             val play: Play = plays[performance]!!
-            var thisAmount = 0
-
-            when (play.type) {
-                Play.Type.TRAGEDY -> {
-                    thisAmount = 40000
-                    if (performance.audience > 30) {
-                        thisAmount += 1000 * (performance.audience - 30)
-                    }
-                }
-
-                Play.Type.COMEDY -> {
-                    thisAmount = 30000
-                    if (performance.audience > 20) {
-                        thisAmount += 10000 + 500 * (performance.audience - 20)
-                    }
-                    thisAmount += 300 * performance.audience
-                }
-
-                else -> throw Exception("알 수 없는 장르")
-            }
+            val thisAmount = amountFor(performance, play)
 
             // 포인트를 적립한다.
             volumeCredit += Math.max(performance.audience - 30, 0)
@@ -68,11 +48,35 @@ class Statement {
             )
             totalAmount += thisAmount
         }
-        
+
         val totalStr = DecimalFormat("#,##0.00", DecimalFormatSymbols(Locale.US))
             .format(totalAmount.toDouble() / 100)
         result.append(String.format("총액: $%s\n", totalStr))
         result.append(String.format("적립 포인트: %d점", volumeCredit))
         return result.toString()
     }
+
+    private fun amountFor(performance: Performance, play: Play): Int {
+        var thisAmount: Int
+        when (play.type) {
+            Play.Type.TRAGEDY -> {
+                thisAmount = 40000
+                if (performance.audience > 30) {
+                    thisAmount += 1000 * (performance.audience - 30)
+                }
+            }
+
+            Play.Type.COMEDY -> {
+                thisAmount = 30000
+                if (performance.audience > 20) {
+                    thisAmount += 10000 + 500 * (performance.audience - 20)
+                }
+                thisAmount += 300 * performance.audience
+            }
+
+            else -> throw java.lang.Exception("알 수 없는 장르")
+        }
+        return thisAmount
+    }
+
 }

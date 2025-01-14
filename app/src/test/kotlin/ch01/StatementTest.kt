@@ -6,6 +6,7 @@ import org.sangho.app.ch01.Invoice
 import org.sangho.app.ch01.Performance
 import org.sangho.app.ch01.Play
 import org.sangho.app.ch01.Statement
+import kotlin.test.assertEquals
 
 class StatementTest {
     private lateinit var plays: Map<Performance, Play>
@@ -29,5 +30,14 @@ class StatementTest {
     fun testStatement() {
         val statement = Statement().statement(invoice, plays)
         println(statement)
+        val expect = """
+            청구내역 (고객명: BigCo)
+            Hamlet: $650 55석
+            As You Like It: $580 35석
+            Othello: $500 40석
+            총액: $1,730.00
+            적립 포인트: 47점
+        """.trimIndent()
+        assertEquals(expect, statement)
     }
 }
