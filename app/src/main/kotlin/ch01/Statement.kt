@@ -39,7 +39,7 @@ class Statement {
         val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", statementData.getCustomer()))
         for (performance in statementData.getPerformances()) {
             // 청구 내역을 출력한다.
-            result.append(String.format("%s: $%d %d석\n", playFor(plays, performance).name, amountFor(performance, plays) / 100, performance.audience))
+            result.append(String.format("%s: $%d %d석\n", statementData.playFor(performance).name, amountFor(performance, plays) / 100, performance.audience))
         }
 
         result.append(String.format("총액: $%s\n", dollarFormat(totalAmount(statementData.invoice, plays))))
