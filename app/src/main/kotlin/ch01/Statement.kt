@@ -39,16 +39,21 @@ class Statement {
             totalAmount += amountFor(performance, plays)
         }
 
-        var volumeCredit = 0
-        for (performance in invoice.getPerformances()) {
-            volumeCredit += volumeCreditFor(plays, performance)
-        }
+        val volumeCredit = totalVolumeCredits(invoice, plays)
 
         val totalStr = DecimalFormat("#,##0.00", DecimalFormatSymbols(Locale.US))
             .format(totalAmount.toDouble() / 100)
         result.append(String.format("총액: $%s\n", totalStr))
         result.append(String.format("적립 포인트: %d점", volumeCredit))
         return result.toString()
+    }
+
+    private fun totalVolumeCredits(invoice: Invoice, plays: Plays): Int {
+        var volumeCredit = 0
+        for (performance in invoice.getPerformances()) {
+            volumeCredit += volumeCreditFor(plays, performance)
+        }
+        return volumeCredit
     }
 
     private fun volumeCreditFor(plays: Plays, performance: Performance): Int {
