@@ -36,7 +36,7 @@ class Statement {
     }
 
     private fun renderPlainText(statementData: StatementData, invoice: Invoice, plays: Plays): String {
-        val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.customer))
+        val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", statementData.getCustomer()))
         for (performance in invoice.getPerformances()) {
             // 청구 내역을 출력한다.
             result.append(String.format("%s: $%d %d석\n", playFor(plays, performance).name, amountFor(performance, plays) / 100, performance.audience))
