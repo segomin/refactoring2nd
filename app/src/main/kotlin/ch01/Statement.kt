@@ -42,21 +42,13 @@ class Statement {
             result.append(String.format("%s: $%d %d석\n", statementData.playFor(performance).name, statementData.amountFor(performance) / 100, performance.audience))
         }
 
-        result.append(String.format("총액: $%s\n", dollarFormat(totalAmount(statementData.invoice, plays))))
+        result.append(String.format("총액: $%s\n", dollarFormat(statementData.totalAmount())))
         result.append(String.format("적립 포인트: %d점", totalVolumeCredits(statementData.invoice, plays)))
         return result.toString()
     }
 
     private fun dollarFormat(amount: Double): String {
         return DecimalFormat("#,##0.00", DecimalFormatSymbols.getInstance(Locale.ENGLISH)).format(amount)
-    }
-
-    private fun totalAmount(invoice: Invoice, plays: Plays): Double {
-        var totalAmount = 0
-        for (performance in invoice.getPerformances()) {
-            totalAmount += amountFor(performance, plays)
-        }
-        return totalAmount.toDouble() / 100
     }
 
     private fun totalVolumeCredits(invoice: Invoice, plays: Plays): Int {

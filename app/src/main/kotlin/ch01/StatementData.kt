@@ -32,4 +32,12 @@ class StatementData(val invoice: Invoice, private val plays: Plays) {
         }
         return result
     }
+
+    fun totalAmount(): Double {
+        var totalAmount = 0
+        for (performance in getPerformances()) {
+            totalAmount += amountFor(performance)
+        }
+        return totalAmount.toDouble() / 100
+    }
 }
