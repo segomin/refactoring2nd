@@ -35,18 +35,13 @@ class Statement {
         var volumeCredit = 0
         val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.customer))
         for (performance in invoice.getPerformances()) {
-            volumeCredit += volumeCreditFor(plays, performance)
-
             // 청구 내역을 출력한다.
-            result.append(
-                String.format(
-                    "%s: $%d %d석\n",
-                    playFor(plays, performance).name,
-                    amountFor(performance, plays) / 100,
-                    performance.audience
-                )
-            )
+            result.append(String.format("%s: $%d %d석\n", playFor(plays, performance).name, amountFor(performance, plays) / 100, performance.audience))
             totalAmount += amountFor(performance, plays)
+        }
+
+        for (performance in invoice.getPerformances()) {
+            volumeCredit += volumeCreditFor(plays, performance)
         }
 
         val totalStr = DecimalFormat("#,##0.00", DecimalFormatSymbols(Locale.US))
