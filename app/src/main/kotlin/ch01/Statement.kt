@@ -31,10 +31,11 @@ class Play(val name: String, val type: Type) {
 
 class Statement {
     fun statement(invoice: Invoice, plays: Plays): String {
-        return renderPlainText(invoice, plays)
+        val statementData = StatementData(invoice, plays)
+        return renderPlainText(statementData, invoice, plays)
     }
 
-    private fun renderPlainText(invoice: Invoice, plays: Plays): String {
+    private fun renderPlainText(statementData: StatementData, invoice: Invoice, plays: Plays): String {
         val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.customer))
         for (performance in invoice.getPerformances()) {
             // 청구 내역을 출력한다.
