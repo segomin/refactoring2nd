@@ -37,16 +37,17 @@ class Statement {
             result.append(String.format("%s: $%d %d석\n", playFor(plays, performance).name, amountFor(performance, plays) / 100, performance.audience))
         }
 
+        result.append(String.format("총액: $%s\n", totalAmount(invoice, plays)))
+        result.append(String.format("적립 포인트: %d점", totalVolumeCredits(invoice, plays)))
+        return result.toString()
+    }
+
+    private fun totalAmount(invoice: Invoice, plays: Plays): String {
         var totalAmount = 0
         for (performance in invoice.getPerformances()) {
             totalAmount += amountFor(performance, plays)
         }
-
-        val totalStr = DecimalFormat("#,##0.00", DecimalFormatSymbols(Locale.US))
-            .format(totalAmount.toDouble() / 100)
-        result.append(String.format("총액: $%s\n", totalStr))
-        result.append(String.format("적립 포인트: %d점", totalVolumeCredits(invoice, plays)))
-        return result.toString()
+        return DecimalFormat("#,##0.00", DecimalFormatSymbols(Locale.US)).format(totalAmount.toDouble() / 100)
     }
 
     private fun totalVolumeCredits(invoice: Invoice, plays: Plays): Int {
