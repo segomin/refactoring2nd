@@ -1,5 +1,8 @@
 package org.sangho.app.ch01
 
+import kotlin.math.floor
+import kotlin.math.max
+
 class StatementData(val invoice: Invoice, private val plays: Plays) {
     fun getCustomer(): String {
         return invoice.customer
@@ -39,5 +42,27 @@ class StatementData(val invoice: Invoice, private val plays: Plays) {
             totalAmount += amountFor(performance)
         }
         return totalAmount.toDouble() / 100
+    }
+
+    fun totalVolumeCredits(): Int {
+        var volumeCredit = 0
+        for (performance in getPerformances()) {
+            volumeCredit += volumeCreditFor(performance)
+        }
+        return volumeCredit
+    }
+
+    private fun volumeCreditFor(performance: Performance): Int {
+        var result = 0
+
+        // 포인트를 적립한다.
+        result += max(performance.audience - 30, 0)
+
+        // 희극 관객 5명마다 추가 포인트를 제공핟나.
+        if (playFor(performance).type == Play.Type.COMEDY) {
+            result = (result + floor((performance.audience / 5).toDouble())).toInt()
+        }
+
+        return result
     }
 }
