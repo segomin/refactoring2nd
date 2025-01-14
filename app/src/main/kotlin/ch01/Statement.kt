@@ -39,12 +39,10 @@ class Statement {
             totalAmount += amountFor(performance, plays)
         }
 
-        val volumeCredit = totalVolumeCredits(invoice, plays)
-
         val totalStr = DecimalFormat("#,##0.00", DecimalFormatSymbols(Locale.US))
             .format(totalAmount.toDouble() / 100)
         result.append(String.format("총액: $%s\n", totalStr))
-        result.append(String.format("적립 포인트: %d점", volumeCredit))
+        result.append(String.format("적립 포인트: %d점", totalVolumeCredits(invoice, plays)))
         return result.toString()
     }
 
