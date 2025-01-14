@@ -26,7 +26,7 @@ class Statement {
         var volumeCredit = 0
         val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.customer))
         for (performance in invoice.getPerformances()) {
-            val play: Play = plays[performance]!!
+            val play: Play = playFor(plays, performance)
             val thisAmount = amountFor(performance, play)
 
             // 포인트를 적립한다.
@@ -77,6 +77,10 @@ class Statement {
             else -> throw java.lang.Exception("알 수 없는 장르")
         }
         return thisAmount
+    }
+
+    private fun playFor(plays: Map<Performance, Play>, performance: Performance): Play {
+        return plays[performance]!!
     }
 
 }
