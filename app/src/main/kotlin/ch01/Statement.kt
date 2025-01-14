@@ -32,18 +32,18 @@ class Play(val name: String, val type: Type) {
 class Statement {
     fun statement(invoice: Invoice, plays: Plays): String {
         val statementData = StatementData(invoice, plays)
-        return renderPlainText(statementData, invoice, plays)
+        return renderPlainText(statementData, plays)
     }
 
-    private fun renderPlainText(statementData: StatementData, invoice: Invoice, plays: Plays): String {
+    private fun renderPlainText(statementData: StatementData, plays: Plays): String {
         val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", statementData.getCustomer()))
-        for (performance in invoice.getPerformances()) {
+        for (performance in statementData.getPerformances()) {
             // 청구 내역을 출력한다.
             result.append(String.format("%s: $%d %d석\n", playFor(plays, performance).name, amountFor(performance, plays) / 100, performance.audience))
         }
 
-        result.append(String.format("총액: $%s\n", dollarFormat(totalAmount(invoice, plays))))
-        result.append(String.format("적립 포인트: %d점", totalVolumeCredits(invoice, plays)))
+        result.append(String.format("총액: $%s\n", dollarFormat(totalAmount(statementData.invoice, plays))))
+        result.append(String.format("적립 포인트: %d점", totalVolumeCredits(statementData.invoice, plays)))
         return result.toString()
     }
 
