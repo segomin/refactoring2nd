@@ -57,17 +57,17 @@ class Statement {
     }
 
     private fun volumeCreditFor(plays: Plays, performance: Performance): Int {
-        var volumeCredit = 0
+        var result = 0
 
         // 포인트를 적립한다.
-        volumeCredit += max(performance.audience - 30, 0)
+        result += max(performance.audience - 30, 0)
 
         // 희극 관객 5명마다 추가 포인트를 제공핟나.
         if (playFor(plays, performance).type == Play.Type.COMEDY) {
-            volumeCredit = (volumeCredit + floor((performance.audience / 5).toDouble())).toInt()
+            result = (result + floor((performance.audience / 5).toDouble())).toInt()
         }
 
-        return volumeCredit
+        return result
     }
 
     private fun amountFor(performance: Performance, plays: Plays): Int {
