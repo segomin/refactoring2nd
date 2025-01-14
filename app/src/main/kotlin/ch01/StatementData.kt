@@ -12,4 +12,24 @@ class StatementData(val invoice: Invoice, private val plays: Plays) {
     fun playFor(performance: Performance): Play {
         return plays.getPlay(performance)
     }
+
+    fun amountFor(performance: Performance): Int {
+        var result = 0
+        when (playFor(performance).type) {
+            Play.Type.TRAGEDY -> {
+                result = 40000
+                if (performance.audience > 30) {
+                    result += 1000 * (performance.audience - 30)
+                }
+            }
+            Play.Type.COMEDY -> {
+                result = 30000
+                if (performance.audience > 20) {
+                    result += 10000 + 500 * (performance.audience - 20)
+                }
+                result += 300 * performance.audience
+            }
+        }
+        return result
+    }
 }
