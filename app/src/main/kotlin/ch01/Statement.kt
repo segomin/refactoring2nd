@@ -31,11 +31,14 @@ class Play(val name: String, val type: Type) {
 
 class Statement {
     fun statement(invoice: Invoice, plays: Plays): String {
-        var totalAmount = 0
         val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.customer))
         for (performance in invoice.getPerformances()) {
             // 청구 내역을 출력한다.
             result.append(String.format("%s: $%d %d석\n", playFor(plays, performance).name, amountFor(performance, plays) / 100, performance.audience))
+        }
+
+        var totalAmount = 0
+        for (performance in invoice.getPerformances()) {
             totalAmount += amountFor(performance, plays)
         }
 
