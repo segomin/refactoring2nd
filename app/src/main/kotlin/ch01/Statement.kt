@@ -13,6 +13,14 @@ class Invoice(val customer: String, private val performances: List<Performance>)
     }
 }
 
+class Plays (vararg plays: Pair<Performance, Play>){
+    private val playMap: Map<Performance, Play> = mapOf(*plays)
+
+    fun getPlay(performance: Performance): Play {
+        return playMap[performance]!!
+    }
+}
+
 class Play(val name: String, val type: Type) {
     enum class Type {
         TRAGEDY, COMEDY
@@ -21,7 +29,7 @@ class Play(val name: String, val type: Type) {
 
 
 class Statement {
-    fun statement(invoice: Invoice, plays: Map<Performance, Play>): String {
+    fun statement(invoice: Invoice, plays: Plays): String {
         var totalAmount = 0
         var volumeCredit = 0
         val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.customer))
@@ -79,8 +87,8 @@ class Statement {
         return thisAmount
     }
 
-    private fun playFor(plays: Map<Performance, Play>, performance: Performance): Play {
-        return plays[performance]!!
+    private fun playFor(plays: Plays, performance: Performance): Play {
+        return plays.getPlay(performance)
     }
 
 }

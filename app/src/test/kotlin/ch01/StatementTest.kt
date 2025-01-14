@@ -2,14 +2,11 @@ package ch01
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.sangho.app.ch01.Invoice
-import org.sangho.app.ch01.Performance
-import org.sangho.app.ch01.Play
-import org.sangho.app.ch01.Statement
+import org.sangho.app.ch01.*
 import kotlin.test.assertEquals
 
 class StatementTest {
-    private lateinit var plays: Map<Performance, Play>
+    private lateinit var plays: Plays
     private lateinit var invoice: Invoice
 
     @BeforeEach
@@ -19,7 +16,7 @@ class StatementTest {
         val asLike = Performance("as-like", 35)
         val othello = Performance("othello", 40)
         invoice = Invoice("BigCo", listOf(hamlet, asLike, othello))
-        plays = mapOf(
+        plays = Plays(
             hamlet to Play("Hamlet", Play.Type.TRAGEDY),
             asLike to Play("As You Like It", Play.Type.COMEDY),
             othello to Play("Othello", Play.Type.TRAGEDY)
