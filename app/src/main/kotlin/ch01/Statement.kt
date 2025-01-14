@@ -4,6 +4,7 @@ import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
 import kotlin.math.floor
+import kotlin.math.max
 
 class Performance(val playID: String, val audience: Int)
 
@@ -34,13 +35,7 @@ class Statement {
         var volumeCredit = 0
         val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.customer))
         for (performance in invoice.getPerformances()) {
-            // 포인트를 적립한다.
-            volumeCredit += Math.max(performance.audience - 30, 0)
-
-            // 희극 관객 5명마다 추가 포인트를 제공핟나.
-            if (playFor(plays, performance).type == Play.Type.COMEDY) {
-                volumeCredit = (volumeCredit + floor((performance.audience.toDouble() / 5))).toInt()
-            }
+            volumeCredit += volumeCreditFor(plays, performance)
 
             // 청구 내역을 출력한다.
             result.append(
@@ -59,6 +54,20 @@ class Statement {
         result.append(String.format("총액: $%s\n", totalStr))
         result.append(String.format("적립 포인트: %d점", volumeCredit))
         return result.toString()
+    }
+
+    private fun volumeCreditFor(plays: Plays, performance: Performance): Int {
+        var volumeCredit = 0
+
+        // 포인트를 적립한다.
+        volumeCredit += max(performance.audience - 30, 0)
+
+        // 희극 관객 5명마다 추가 포인트를 제공핟나.
+        if (playFor(plays, performance).type == Play.Type.COMEDY) {
+            volumeCredit = (volumeCredit + floor((performance.audience / 5).toDouble())).toInt()
+        }
+
+        return volumeCredit
     }
 
     private fun amountFor(performance: Performance, plays: Plays): Int {
