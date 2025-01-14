@@ -34,8 +34,6 @@ class Statement {
         var volumeCredit = 0
         val result = StringBuilder(String.format("청구내역 (고객명: %s)\n", invoice.customer))
         for (performance in invoice.getPerformances()) {
-            val thisAmount = amountFor(performance, plays)
-
             // 포인트를 적립한다.
             volumeCredit += Math.max(performance.audience - 30, 0)
 
@@ -49,11 +47,11 @@ class Statement {
                 String.format(
                     "%s: $%d %d석\n",
                     playFor(plays, performance).name,
-                    thisAmount / 100,
+                    amountFor(performance, plays) / 100,
                     performance.audience
                 )
             )
-            totalAmount += thisAmount
+            totalAmount += amountFor(performance, plays)
         }
 
         val totalStr = DecimalFormat("#,##0.00", DecimalFormatSymbols(Locale.US))
